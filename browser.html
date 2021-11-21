@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>Lyrics Source</title>
+	<link rel="stylesheet" href="browser.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	</head>
+	
+	<body>
+	
+	<!--<div id="title-panel" class="center" style="display:none;" >-->
+	<div id="title-panel" class="left" style="">
+		<div>
+			<h1 id="title-name">Fred Snird</h1>
+			<h2 id="title-subtitle">Stake President, Maple Mountain Stake</h2>
+		</div>
+	</div>
+</body>
+
+<script type="text/javascript">
+const mindcontrol = new BroadcastChannel('obs-title');
+
+mindcontrol.onmessage = (messageEvent) => {
+	//alert(messageEvent.data.action);
+    if (messageEvent.data.action === 'update_title') {
+      //alert(messageEvent.data.text); 
+	  $("#title-panel").html(messageEvent.data.text);
+    }
+	if (messageEvent.data.action === 'hide') {
+		$("#title-panel").fadeOut(400);
+	}
+	if (messageEvent.data.action === 'show') {
+		$("#title-panel").fadeIn(400);
+	}
+  }
+
+</script>
+</html>
