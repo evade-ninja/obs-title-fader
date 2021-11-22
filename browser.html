@@ -12,7 +12,7 @@
 	<body>
 	
 	<!--<div id="title-panel" class="center" style="display:none;" >-->
-	<div id="title-panel" class="left" style="">
+	<div id="title-panel" class="left" style="display: none;">
 		<div>
 			<h1 id="title-name">Fred Snird</h1>
 			<h2 id="title-subtitle">Stake President, Maple Mountain Stake</h2>
@@ -25,15 +25,15 @@ const mindcontrol = new BroadcastChannel('obs-title');
 
 mindcontrol.onmessage = (messageEvent) => {
 	//alert(messageEvent.data.action);
-    if (messageEvent.data.action === 'update_title') {
-      //alert(messageEvent.data.text); 
-	  $("#title-panel").html(messageEvent.data.text);
-    }
+
 	if (messageEvent.data.action === 'hide') {
 		$("#title-panel").fadeOut(400);
 	}
 	if (messageEvent.data.action === 'show') {
+		$("#title-name").html(messageEvent.data.text1);
+	    $("#title-subtitle").html(messageEvent.data.text2);
 		$("#title-panel").fadeIn(400);
+		setTimeout(function(){$('#title-panel').fadeOut(400);}, 7000);
 	}
   }
 

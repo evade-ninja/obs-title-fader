@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<script src="hotkeys.js"></script>
+
+	<script type="text/javascript">
+	const mindcontrol = new BroadcastChannel('obs-title');
+
+	mindcontrol.onmessage = function (ev) {
+		("#lyric-panel").html(ev.data);
+		
+	}
+
+	//var ctitle = "";
+	//var csubtitle = "";
+	var hotkeySwitch1Old = hotkeySwitch1;
+
+	function save(){
+		//console.log($("#cards").val());
+
+		var s=$("#cards").val();
+		
+		localStorage.setItem($("#cards").val(), JSON.stringify({'title':$("#title").val(), 'subtitle':$("#subtitle").val()}));
+
+		loadcards();
+		$("#cards").val(s);
+		//ctitle = $("#title").val();
+		//csubtitle = $("#subtitle").val();
+		//ingest();
+
+	}
+
+	function load(){
+		var x = $("#cards").val();
+		var s = JSON.parse(localStorage.getItem(x));
+		if(s){
+				$("#title").val(s.title);
+				$("#subtitle").val(s.subtitle);
+				//ctitle = s.title;
+				//csubtitle = s.subtitle;
+				//ingest();
+			}else{
+				$("#title").val("");
+				$("#subtitle").val("");	
+			}
+	}
+
+	function sendTitle(){
+		mindcontrol.postMessage({'action':'show','text1': $("#title").val(), 'text2': $("#subtitle").val()});
+		//console.log("hello");
+	}
+	
+	
+	function loadcards(){
+		//var opts = "";
+		$("#cards").html("");
+		for(let x = 1; x<20; x++){
+			//console.dir(localStorage.getItem("Song" + x));
+			var s = JSON.parse(localStorage.getItem("Card" + x));
+			if(s){
+				$("#cards").append(new Option(s.title, "Card"+x));
+			}else{
+				$("#cards").append(new Option(x + " - Empty", "Card"+x));
+			}
+			
+		}
+	}
+
+	function clearStorage(){
+		localStorage.clear();
+	}
+
+
+	</script>
+		
+		<title>Title Magic</title>
+		<link rel="stylesheet" href="controls.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	</head>
+	<body>
+	<div class="input-group">
+		<div id="cardselect">
+		 <label for="cards">Card:</label>
+			<select id="cards" name="cards" onchange="load();">
+			</select> 
+		</div>
+	</div>
+	<div>
+		<div class="input-group"><label for="title">Title:</label></div>
+		<div class="input-group"><input type="text" id="title" name="title"></div>
+		<div class="input-group"><label for="title">SubTitle:</label></div>
+		<div class="input-group"><input type="text" id="subtitle" name="subtitle"></div>
+		<button onclick="save();" class="success">Save</button>
+	</div>
+	<div>
+	
+	</div>
+	<div class="input-group">
+		<button onclick="sendTitle();" class="primary bigger">SHOW</button>
+	</div>
+
+	<div class="input-group" style="margin-top: 30px;">
+		<button onclick="mindcontrol.postMessage({'action':'hide'});" class="danger">Force Hide</button>
+		<!--<button onclick="mindcontrol.postMessage({'action':'show'});" class="primary">Force Show</button>-->
+	</div>
+
+	<button onclick="clearStorage();" class="danger" style="display:none;">CLEAR</button>
+	
+
+	</body>
+	<script>
+	loadcards();
+	load();
+
+	function checkHotKeys(){
+		if (hotkeySwitch1 != hotkeySwitch1Old){
+			sendTitle();	
+			hotkeySwitch1Old = hotkeySwitch1;
+		}
+	}
+
+
+	function updateHotkeys() {
+		src = 'hotkeys.js';
+		$('script[src="' + src + '"]').remove();
+		var head= document.getElementsByTagName('head')[0];
+		var script= document.createElement('script');
+		script.src= src;
+		head.appendChild(script);
+	}
+
+
+	function checkUpdates() {
+		updateHotkeys();
+		checkHotKeys();
+	}
+
+	setInterval(checkUpdates, 200);
+	</script>
+
+
+	
+	</html>

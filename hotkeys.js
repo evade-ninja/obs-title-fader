@@ -1,0 +1,1 @@
+hotkeySwitch1 = 1;
