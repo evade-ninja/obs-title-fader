@@ -27,9 +27,6 @@
 
 		loadcards();
 		$("#cards").val(s);
-		//ctitle = $("#title").val();
-		//csubtitle = $("#subtitle").val();
-		//ingest();
 
 	}
 
@@ -73,6 +70,17 @@
 		localStorage.clear();
 	}
 
+	function clearCard(){
+		var s=$("#cards").val();
+		
+		//localStorage.setItem($("#cards").val(), JSON.stringify({'title': $("#cards").prop("options").selectedIndex + " - Empty", 'subtitle':""}));
+		localStorage.removeItem($("#cards").val());
+
+		loadcards();
+		$("#cards").val(s);
+		load();
+	}
+
 
 	</script>
 		
@@ -94,6 +102,7 @@
 		<div class="input-group"><label for="title">SubTitle:</label></div>
 		<div class="input-group"><input type="text" id="subtitle" name="subtitle"></div>
 		<button onclick="save();" class="success">Save</button>
+		<button onclick="clearCard();" class="danger">Clear Card</button>
 	</div>
 	<div>
 	
@@ -104,6 +113,7 @@
 
 	<div class="input-group" style="margin-top: 30px;">
 		<button onclick="mindcontrol.postMessage({'action':'hide'});" class="danger">Force Hide</button>
+		
 		<!--<button onclick="mindcontrol.postMessage({'action':'show'});" class="primary">Force Show</button>-->
 	</div>
 

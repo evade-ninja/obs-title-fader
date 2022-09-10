@@ -38,7 +38,10 @@ h1{
 	font-weight: 900;
 	width: 100%;
 	font-size: 400%;
-	margin-bottom: 0px
+	margin-bottom: 0px;
+	text-shadow: 2px 2px #000000;
+	-webkit-text-stroke-width: 2px;
+	-webkit-text-stroke-color: black;
 }
 
 h2{
@@ -46,7 +49,9 @@ h2{
 	width: 100%;
 	font-size: 250%;
 	margin-top: 0px;
-	
+	text-shadow: 2px 2px #000000;
+	-webkit-text-stroke-width: 1px;
+	-webkit-text-stroke-color: black;
 }
 
 .small{
