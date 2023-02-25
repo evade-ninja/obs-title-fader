@@ -102,6 +102,7 @@
 		<div class="input-group"><label for="title">SubTitle:</label></div>
 		<div class="input-group"><input type="text" id="subtitle" name="subtitle"></div>
 		<button onclick="save();" class="success">Save</button>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<button onclick="clearCard();" class="danger">Clear Card</button>
 	</div>
 	<div>
@@ -109,12 +110,8 @@
 	</div>
 	<div class="input-group">
 		<button onclick="sendTitle();" class="primary bigger">SHOW</button>
-	</div>
-
-	<div class="input-group" style="margin-top: 30px;">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<button onclick="mindcontrol.postMessage({'action':'hide'});" class="danger">Force Hide</button>
-		
-		<!--<button onclick="mindcontrol.postMessage({'action':'show'});" class="primary">Force Show</button>-->
 	</div>
 
 	<button onclick="clearStorage();" class="danger" style="display:none;">CLEAR</button>
