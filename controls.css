@@ -83,3 +83,6 @@ button:hover.warning {
     border-color: #ffc107;;
 }
 
+textarea {
+    margin-top: 4px;
+}

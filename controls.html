@@ -16,6 +16,9 @@
 
 	//var ctitle = "";
 	//var csubtitle = "";
+
+	var maxCards = 25;
+
 	var hotkeySwitch1Old = hotkeySwitch1;
 
 	function save(){
@@ -25,7 +28,7 @@
 		
 		localStorage.setItem($("#cards").val(), JSON.stringify({'title':$("#title").val(), 'subtitle':$("#subtitle").val()}));
 
-		loadcards();
+		loadCards(localStorage);
 		$("#cards").val(s);
 
 	}
@@ -36,9 +39,6 @@
 		if(s){
 				$("#title").val(s.title);
 				$("#subtitle").val(s.subtitle);
-				//ctitle = s.title;
-				//csubtitle = s.subtitle;
-				//ingest();
 			}else{
 				$("#title").val("");
 				$("#subtitle").val("");	
@@ -49,15 +49,13 @@
 		mindcontrol.postMessage({'action':'show','text1': $("#title").val(), 'text2': $("#subtitle").val()});
 		//console.log("hello");
 	}
-	
-	
-	function loadcards(){
+
+	function loadCards(carddata){
 		//var opts = "";
 		$("#cards").html("");
-		for(let x = 1; x<25; x++){
-			//console.dir(localStorage.getItem("Song" + x));
-			var s = JSON.parse(localStorage.getItem("Card" + x));
-			if(s){
+		for(let x = 1; x<maxCards; x++){	
+			if(carddata.hasOwnProperty("Card"+x)){
+				var s = JSON.parse(carddata["Card"+x]);
 				$("#cards").append(new Option(s.title, "Card"+x));
 			}else{
 				$("#cards").append(new Option(x + " - Empty", "Card"+x));
@@ -72,12 +70,27 @@
 
 	function clearCard(){
 		var s=$("#cards").val();
-		
-		//localStorage.setItem($("#cards").val(), JSON.stringify({'title': $("#cards").prop("options").selectedIndex + " - Empty", 'subtitle':""}));
+
 		localStorage.removeItem($("#cards").val());
 
-		loadcards();
+		loadCards();
 		$("#cards").val(s);
+		load();
+	}
+
+	function exportCards(){
+		$("#export").show();
+		$("#edata").val(JSON.stringify(localStorage));
+	}
+
+	function importCards(){
+		var c = JSON.parse($("#edata").val());
+		loadCards(c);
+		for(let x = 1; x<maxCards; x++){	
+			if(c.hasOwnProperty("Card"+x)){
+				localStorage.setItem("Card"+x, c["Card"+x]);
+			}
+		}
 		load();
 	}
 
@@ -112,6 +125,7 @@
 		<button onclick="sendTitle();" class="primary bigger">SHOW</button>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<button onclick="mindcontrol.postMessage({'action':'hide'});" class="danger">Force Hide</button>
+		<button onclick="exportCards();" class="danger">Import/Export</button>
 	</div>
 
 	<button onclick="clearStorage();" class="danger" style="display:none;">CLEAR</button>
@@ -119,7 +133,8 @@
 
 	</body>
 	<script>
-	loadcards();
+	//loadCards(JSON.parse(JSON.stringify(localStorage)));
+	loadCards(localStorage);
 	load();
 
 	function checkHotKeys(){
@@ -148,6 +163,13 @@
 	setInterval(checkUpdates, 200);
 	</script>
 
+	<div id="export" style="display:none;">
+		<label for="edata">Import/Export:</label>
+		<textarea name="edata" id="edata" cols="30" rows="10 spellcheck="false"></textarea>
+		<button onclick="importCards();" class="success">Import</button>
+		&nbsp;&nbsp;
+		<button onclick="$('#export').hide();" class="primary">Done</button>
+	</div>
 
 	
 	</html>
