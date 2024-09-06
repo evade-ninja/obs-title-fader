@@ -39,10 +39,12 @@
 		if(s){
 				$("#title").val(s.title);
 				$("#subtitle").val(s.subtitle);
+
 			}else{
 				$("#title").val("");
 				$("#subtitle").val("");	
 			}
+		mindcontrol.postMessage({ 'action': 'load', 'text1': $("#title").val(), 'text2': $("#subtitle").val() });
 	}
 
 	function sendTitle(){
@@ -161,6 +163,10 @@
 	}
 
 	setInterval(checkUpdates, 200);
+
+	window.addEventListener('obsSceneChanged', function(event){
+		$("#title").val(event.detail.name);
+	})
 	</script>
 
 	<div id="export" style="display:none;">

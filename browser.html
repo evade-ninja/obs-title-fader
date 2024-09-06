@@ -35,7 +35,16 @@ mindcontrol.onmessage = (messageEvent) => {
 		$("#title-panel").fadeIn(400);
 		setTimeout(function(){$('#title-panel').fadeOut(400);}, 7000);
 	}
+	if (messageEvent.data.action === 'load') {
+		$("#title-name").html(messageEvent.data.text1);
+		$("#title-subtitle").html(messageEvent.data.text2);
+	}
   }
+
+window.addEventListener('otfShow', function (event) {
+	$("#title-panel").fadeIn(400);
+	setTimeout(function () { $('#title-panel').fadeOut(400); }, 7000);
+});
 
 </script>
 </html>
