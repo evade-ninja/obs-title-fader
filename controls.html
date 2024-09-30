@@ -1,220 +1,285 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-		<script src="hotkeys.js"></script>
-		<link rel="stylesheet" href="fa/fontawesome.min.css">
-		<link rel="stylesheet" href="fa/solid.min.css">
-		<link rel="stylesheet" href="fa/regular.min.css">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<link rel="stylesheet" href="fa/fontawesome.min.css">
+	<link rel="stylesheet" href="fa/solid.min.css">
+	<link rel="stylesheet" href="fa/regular.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 	<script type="text/javascript">
-	const mindcontrol = new BroadcastChannel('obs-title');
+		const mindcontrol = new BroadcastChannel('obs-title');
+		let currentIndex = 0;
+		let currentLength = 0;
+		let cards = [];
 
-	mindcontrol.onmessage = function (ev) {
-		("#lyric-panel").html(ev.data);
-		
-	}
+		mindcontrol.onmessage = function (ev) {
+			//	("#lyric-panel").html(ev.data);
+		}
 
-	//var ctitle = "";
-	//var csubtitle = "";
+		function save() {
+			cards[currentIndex] = {
+				"title": $("#title").val(),
+				"subtitle": $("#subtitle").val()
+			};
 
-	var maxCards = 25;
+			localStorage.setItem("numCards", cards.length);
+			localStorage.setItem("cards", JSON.stringify(cards));
 
-	var hotkeySwitch1Old = hotkeySwitch1;
+			loadCards();
+			$("#cards").val(currentIndex);
+			$("#edit").hide();
+		}
 
-	function save(){
-		//console.log($("#cards").val());
+		function load() {
+			currentIndex = $("#cards").val();
+			if (cards[currentIndex]) {
+				$("#title").val(cards[currentIndex].title);
+				$("#subtitle").val(cards[currentIndex].subtitle);
 
-		var s=$("#cards").val();
-		
-		localStorage.setItem($("#cards").val(), JSON.stringify({'title':$("#title").val(), 'subtitle':$("#subtitle").val()}));
-
-		loadCards(localStorage);
-		$("#cards").val(s);
-
-	}
-
-	function load(){
-		var x = $("#cards").val();
-		var s = JSON.parse(localStorage.getItem(x));
-		if(s){
-				$("#title").val(s.title);
-				$("#subtitle").val(s.subtitle);
-
-			}else{
+			} else {
 				$("#title").val("");
-				$("#subtitle").val("");	
+				$("#subtitle").val("");
 			}
-		mindcontrol.postMessage({ 'action': 'load', 'text1': $("#title").val(), 'text2': $("#subtitle").val() });
-	}
+			mindcontrol.postMessage({ 'action': 'load', 'text1': $("#title").val(), 'text2': $("#subtitle").val() });
+			$("#edit").hide();
+		}
 
-	function sendTitle(){
-		mindcontrol.postMessage({'action':'show','text1': $("#title").val(), 'text2': $("#subtitle").val()});
-		//console.log("hello");
-	}
+		function sendTitle() {
+			mindcontrol.postMessage({ 'action': 'show', 'text1': $("#title").val(), 'text2': $("#subtitle").val() });
+		}
 
-	function loadCards(cardData){
-		//var opts = "";
-		$("#cards").html("");
-		if(cardData.hasOwnProperty("numCards") && cardData.hasOwnProperty("cards")){
-			for (let x = 1; x < maxCards; x++) {
-				var s = JSON.parse(cardData[x]);
-				$("#cards").append(new Option(s.title, x));
+		function loadCards() {
+			$("#cards").html("");
+
+			if (localStorage.getItem("numCards") && localStorage.getItem("cards")) {
+				cards = JSON.parse(localStorage.getItem("cards"));
+				for (let x = 0; x < localStorage.getItem("numCards"); x++) {
+					$("#cards").append(new Option(cards[x].title, x));
+				}
+				currentLength = cards.length
+			} else {
+				// Storage is empty or corrupt
+				localStorage.clear();
 			}
-		}else{
-			// Storage is empty or corrupt
+		}
+
+		function clearStorage() {
 			localStorage.clear();
+			loadCards();
 		}
-	}
 
-	function clearStorage(){
-		localStorage.clear();
-	}
+		function clearCard() {
+			var s = $("#cards").val();
 
-	function clearCard(){
-		var s=$("#cards").val();
+			localStorage.removeItem($("#cards").val());
 
-		localStorage.removeItem($("#cards").val());
-
-		loadCards();
-		$("#cards").val(s);
-		load();
-	}
-
-	function exportCards(){
-		$("#export").show();
-		$("#edata").val(JSON.stringify(localStorage));
-	}
-
-	function importCards(){
-		var c = JSON.parse($("#edata").val());
-		loadCards(c);
-		for(let x = 1; x<maxCards; x++){	
-			if(c.hasOwnProperty("Card"+x)){
-				localStorage.setItem("Card"+x, c["Card"+x]);
-			}
+			loadCards();
+			$("#cards").val(s);
+			load();
 		}
-		load();
-	}
+
+		function exportCards() {
+			$("#export").show();
+			$("#edata").val(JSON.stringify(localStorage));
+			$("#edit").hide();
+		}
+
+		function importCards() {
+			var c = JSON.parse($("#edata").val());
+			console.log(c);
+
+			cards = JSON.parse(c.cards);
+			numCards = c.numCards;
+
+			localStorage.setItem("numCards", numCards);
+			localStorage.setItem("cards", JSON.stringify(cards));
+
+			loadCards();
+			currentIndex = 0;
+			load();
+		}
+
+		function addCard() {
+			currentIndex = currentLength;
+			$("#title").val("");
+			$("#subtitle").val("");
+			$("#editTitle").html("Add Card")
+			$("#edit").show();
+			$("#export").hide();
+		}
+
+		function editCard() {
+			$("#editTitle").html("Edit Card")
+			$("#edit").show();
+			$("#export").hide();
+		}
+
+		function showDel() {
+			$('#confirm').show();
+			$("#main").hide();
+			$("#edit").hide();
+			$("#export").hide();
+		}
+
+		function hideAll() {
+			$('#confirm').hide();
+			$("#edit").hide();
+			$("#export").hide();
+			$("#main").show();
+		}
+
+		function deleteCard() {
+			cards.splice(currentIndex, 1);
+			localStorage.setItem("numCards", cards.length);
+			localStorage.setItem("cards", JSON.stringify(cards));
+			loadCards();
+			hideAll();
+		}
+
 
 
 	</script>
-		
-		<title>Title Magic</title>
-		<link rel="stylesheet" href="controls.css">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-	</head>
-	<body>
-	<div class="input-group">
-		<div id="cardselect">
-		<i class="fa-regular fa-circle-user"></i>
-			<select id="cards" name="cards" onchange="load();">
-			</select> 
-		</div>
-	</div>
 
-	<div id="card-tools">
-		<div class="toolstrip" id="card-controls">
-			<button onclick="sendTitle();" class="primary bigger pt"><i class="fa-solid fa-circle-play"></i></button>
-			<button onclick="mindcontrol.postMessage({'action':'hide'});" class="stop stopt bigger"><i class="fa-solid fa-circle-stop"></i></button>
-		</div>
+	<title>Title Magic</title>
+	<link rel="stylesheet" href="controls.css">
+	
+</head>
 
-		<div class="toolstrip" id="card-edit-controls">
-			<button onclick="" class="bigger success st" title="Add"><i class="fa-solid fa-circle-plus"></i></button>
-			<button onclick="" class="bigger warning wt"><i class="fa-solid fa-circle-chevron-down"></i></button>
-			<button onclick="" class="bigger danger dt"><i class="fa-solid fa-trash-can"></i></button>
-			&nbsp;
-			<button onclick="exportCards();" class="bigger vault vault-txt"><i class="fa-solid fa-vault"></i></button>
-		</div>
-	</div>
+<body>
 
-	<div id="edit-window">
+	<div id="confirm" class="modal">
 		<div class="card-edit-window">
 			<div class="edit-header">
-				<i class="fa-solid fa-pencil"></i> Edit Title
+				<i class="fa-solid fa-trash-can"></i> Delete Card?
 			</div>
-			<div class="input-group"><i class="fa-regular fa-circle-user"></i>&nbsp;<input type="text" id="title" name="title"></div>
-			<div class="input-group"><i class="fa-regular fa-address-card"></i>&nbsp;<input type="text" id="subtitle" name="subtitle"></div>
+
+			<div class="dialog-warn">
+				<div class="dialog-icon">
+					<i class="fa-regular fa-circle-question bigger"></i>
+				</div>
+				<div class="dialog-item">
+					Sure you want to delete this card?
+				</div>
+			</div>
+
 
 			<div class="toolstrip ts-inside">
-				<button onclick="save();" class="bigger success st" title="Save"><i class="fa-solid fa-floppy-disk"></i></button>
-				<button onclick="" class="bigger danger dt"><i class="fa-solid fa-rectangle-xmark"></i></button>
+				<button onclick="deleteCard();" class="bigger danger" title="import"><i class="fa-solid fa-trash-can"></i>
+					Delete</button>
+				<button onclick="hideAll();" class="bigger primary pt"><i class="fa-solid fa-rectangle-xmark"></i>
+					Cancel</button>
+			</div>
+		</div>
+	</div>
+	<div id="main">
+		<div class="input-group">
+			<div id="cardselect">
+				<i class="fa-regular fa-circle-user"></i>
+				<select id="cards" name="cards" onchange="load();">
+				</select>
+			</div>
+		</div>
+
+		<div id="card-tools">
+			<div class="toolstrip" id="card-controls">
+				<button onclick="sendTitle();" class="primary bigger"><i class="fa-solid fa-circle-play"></i></button>
+				<button onclick="mindcontrol.postMessage({'action':'hide'});" class="stop bigger"><i
+						class="fa-solid fa-circle-stop"></i></button>
 			</div>
 
-
-			<div>
-				<button onclick="save();" class="success">Save</button>
+			<div class="toolstrip" id="card-edit-controls">
+				<button onclick="addCard();" class="bigger success" title="Add"><i
+						class="fa-solid fa-circle-plus"></i></button>
+				<button onclick="editCard();" class="bigger warning"><i
+						class="fa-solid fa-circle-chevron-down"></i></button>
+				<button onclick="showDel();" class="bigger danger"><i class="fa-solid fa-trash-can"></i></button>
+				&nbsp;
+				<button onclick="exportCards();" class="bigger vault"><i class="fa-solid fa-vault"></i></button>
 			</div>
-			
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<button onclick="clearCard();" class="danger">Clear Card</button>
+		</div>
+
+	</div>
+
+	<div id="edit">
+		<div class="card-edit-window">
+			<div class="edit-header">
+				<i class="fa-solid fa-pencil"></i> <span id="editTitle">Edit Title 0</span>
+			</div>
+			<div class="input-group"><i class="fa-regular fa-circle-user"></i>&nbsp;<input type="text" id="title"
+					name="title"></div>
+			<div class="input-group"><i class="fa-regular fa-address-card"></i>&nbsp;<input type="text" id="subtitle"
+					name="subtitle"></div>
+
+			<div class="toolstrip ts-inside">
+				<button onclick="save();" class="bigger success" title="Save"><i
+						class="fa-solid fa-floppy-disk"></i></button>
+				<button onclick="hideAll();" class="bigger danger"><i class="fa-solid fa-rectangle-xmark"></i></button>
+			</div>
 		</div>
 	</div>
 
-	<div id="export" style="display:none;">
+	<div id="export">
 		<div class="card-edit-window">
 			<div class="edit-header">
 				<i class="fa-solid fa-vault"></i> Import/Export
 			</div>
-			<div class="input-group"><i class="fa-solid fa-database"></i>&nbsp;<textarea name="edata" id="edata" cols="30" rows="10 spellcheck=" false"></textarea></div>
-	
+
+				<div class="dialog-item"><textarea name="edata" id="edata" cols="30"
+					rows="10" spellcheck="false"></textarea></div>
+
 			<div class="toolstrip ts-inside">
-				<button onclick="importCards();" class="bigger success st" title="import"><i class="fa-solid fa-download"></i></button>
-				<button onclick="$('#export').hide();" class="bigger primary pt"><i class="fa-solid fa-rectangle-xmark"></i></button>
+				<button onclick="importCards();" class="bigger success" title="import"><i
+						class="fa-solid fa-download"></i></button>
+				<button onclick="$('#export').hide();" class="bigger primary"><i
+						class="fa-solid fa-rectangle-xmark"></i></button>
+			
 			</div>
 		</div>
 	</div>
 
 	<div>
-	
-	</div>
-	<div class="input-group">
-		<button onclick="sendTitle();" class="primary bigger">SHOW</button>
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<button onclick="mindcontrol.postMessage({'action':'hide'});" class="danger">Force Hide</button>
-		<button onclick="exportCards();" class="danger">Import/Export</button>
+
 	</div>
 
-	<button onclick="clearStorage();" class="danger" style="display:none;">CLEAR</button>
-	
-
-	</body>
-	<script>
+</body>
+<script>
 	//loadCards(JSON.parse(JSON.stringify(localStorage)));
 	loadCards(localStorage);
 	load();
-/*
-	function checkHotKeys(){
-		if (hotkeySwitch1 != hotkeySwitch1Old){
-			sendTitle();	
-			hotkeySwitch1Old = hotkeySwitch1;
+	/*
+		function checkHotKeys(){
+			if (hotkeySwitch1 != hotkeySwitch1Old){
+				sendTitle();	
+				hotkeySwitch1Old = hotkeySwitch1;
+			}
 		}
-	}
-
-
-	function updateHotkeys() {
-		src = 'hotkeys.js';
-		$('script[src="' + src + '"]').remove();
-		var head= document.getElementsByTagName('head')[0];
-		var script= document.createElement('script');
-		script.src= src;
-		head.appendChild(script);
-	}
-
-
-	function checkUpdates() {
-		updateHotkeys();
-		checkHotKeys();
-	}
-
-	setInterval(checkUpdates, 200);
-*/
-	window.addEventListener('obsSceneChanged', function(event){
+	
+	
+		function updateHotkeys() {
+			src = 'hotkeys.js';
+			$('script[src="' + src + '"]').remove();
+			var head= document.getElementsByTagName('head')[0];
+			var script= document.createElement('script');
+			script.src= src;
+			head.appendChild(script);
+		}
+	
+	
+		function checkUpdates() {
+			updateHotkeys();
+			checkHotKeys();
+		}
+	
+		setInterval(checkUpdates, 200);
+	*/
+	window.addEventListener('obsSceneChanged', function (event) {
 		$("#title").val(event.detail.name);
 	})
-	</script>
+</script>
 <!--
 	<div id="export" style="display:none;">
 		<label for="edata">Import/Export:</label>
@@ -224,5 +289,5 @@
 		<button onclick="$('#export').hide();" class="primary">Done</button>
 	</div>
 -->
-	
-	</html>
+
+</html>

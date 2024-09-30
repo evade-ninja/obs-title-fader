@@ -35,55 +35,29 @@ button {
     border-color: #3c404d;
 }
 
-.pt {
+.primary {
     color: #4ea4ff
 }
 
-.pt:hover{
-    color: #FFFFFF
-}
-
-.st {
+.success {
     color: #31ff61
 }
 
-.st:hover {
-    color: #FFFFFF
-}
-
-.dt {
+.danger {
     color: #f35565
 }
 
-.dt:hover {
-    color: #FFFFFF
-}
-
-.wt {
+.warning {
     color: #ffd24a
 }
 
-.wt:hover {
-    color: #FFFFFF;
-}
-
-.stopt {
+.stop {
     color: #bb82ff
 }
 
-.stopt:hover{
-    color: #FFFFFF
-}
-
-.vault-txt{
+.vault{
     color: #4af2ff
 }
-
-.vault-txt:hover{
-    color: #FFFFFF
-}
-
-
 
 button.bigger {
     font-size: 1.25rem;
@@ -105,6 +79,7 @@ button:hover.danger {
     border-width: 1px;
     background-color: #dc3545;
     border-color: #dc3545;
+    color: #FFFFFF
 }
 
 button:hover.primary {
@@ -112,8 +87,9 @@ button:hover.primary {
     border-radius: 4px;
     border-style: solid;
     border-width: 1px;
-    background-color: #007bff;;
-    border-color: #007bff;;
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #FFFFFF;
 }
 
 button:hover.success {
@@ -121,8 +97,9 @@ button:hover.success {
     border-radius: 4px;
     border-style: solid;
     border-width: 1px;
-    background-color: #28a745;;
-    border-color: #28a745;;
+    background-color: #28a745;
+    border-color: #28a745;
+    color: #FFFFFF;
 }
 
 button:hover.warning {
@@ -130,8 +107,9 @@ button:hover.warning {
     border-radius: 4px;
     border-style: solid;
     border-width: 1px;
-    background-color: #ffc107;;
-    border-color: #ffc107;;
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #FFFFFF;
 }
 
 button:hover.stop {
@@ -140,9 +118,8 @@ button:hover.stop {
     border-style: solid;
     border-width: 1px;
     background-color: #7707ff;
-    ;
     border-color: #7707ff;
-    ;
+    color: #FFFFFF;
 }
 
 button:hover.vault {
@@ -151,9 +128,8 @@ button:hover.vault {
     border-style: solid;
     border-width: 1px;
     background-color: #00d3e3;
-    ;
     border-color: #00d3e3;
-    ;
+    color: #FFFFFF;
 }
 
 textarea {
@@ -173,8 +149,14 @@ textarea {
     float: right;
 }
 
-#edit-window{
+#edit{
     padding-top: 16px;
+    display: none;
+}
+
+#export{
+    margin-top: 16px;
+    display: none;
 }
 
 .card-edit-window{
@@ -186,4 +168,32 @@ textarea {
 .edit-header{
     background-color: #3c404d;
     padding: 8px;
+}
+
+i.bigger{
+    font-size: xx-large;
+}
+
+.dialog-warn{
+    padding: 8px;
+}
+
+.dialog-item{
+    display: inline-block;
+    padding-bottom: 16px;
+}
+
+.dialog-icon{
+    padding-right: 8px;
+    display: inline-block;
+}
+
+#confirm{
+    position: static;
+    display: none;
+    top: 0px;
+    left: 0px;
+    z-index: 100;
+    width: 100%;
+    height: 100%;
 }
