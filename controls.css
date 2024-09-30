@@ -1,22 +1,23 @@
 :root {
-    --obs-background: #3a393a;
+    --obs-background: #272a33;
 }
 
 body {
-    background-color: #3a393a;
+    background-color: #272a33;
     color: #FFFFFF;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 input, textarea, select {
-    background-color: rgb(31,30,31);
+    background-color: #1d1f26;
     color: #FFFFFF;
     border-radius: 4px;
     border-style: solid;
     border-width: 1px;
+    border-color: #3c404d;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 1rem;
-    width: 95%;
+    width: 90%;
     padding: 4px;
 }
 
@@ -30,9 +31,59 @@ button {
     border-radius: 4px;
     border-style: solid;
     border-width: 1px;
-    background-color: #545b62;
-    border-color: #4e555b;
+    background-color: #3c404d;
+    border-color: #3c404d;
 }
+
+.pt {
+    color: #4ea4ff
+}
+
+.pt:hover{
+    color: #FFFFFF
+}
+
+.st {
+    color: #31ff61
+}
+
+.st:hover {
+    color: #FFFFFF
+}
+
+.dt {
+    color: #f35565
+}
+
+.dt:hover {
+    color: #FFFFFF
+}
+
+.wt {
+    color: #ffd24a
+}
+
+.wt:hover {
+    color: #FFFFFF;
+}
+
+.stopt {
+    color: #bb82ff
+}
+
+.stopt:hover{
+    color: #FFFFFF
+}
+
+.vault-txt{
+    color: #4af2ff
+}
+
+.vault-txt:hover{
+    color: #FFFFFF
+}
+
+
 
 button.bigger {
     font-size: 1.25rem;
@@ -83,6 +134,56 @@ button:hover.warning {
     border-color: #ffc107;;
 }
 
+button:hover.stop {
+    margin: 0;
+    border-radius: 4px;
+    border-style: solid;
+    border-width: 1px;
+    background-color: #7707ff;
+    ;
+    border-color: #7707ff;
+    ;
+}
+
+button:hover.vault {
+    margin: 0;
+    border-radius: 4px;
+    border-style: solid;
+    border-width: 1px;
+    background-color: #00d3e3;
+    ;
+    border-color: #00d3e3;
+    ;
+}
+
 textarea {
     margin-top: 4px;
+}
+
+.toolstrip {
+    display: inline-block;
+}
+
+.ts-inside {
+    padding-left: 8px;
+    padding-bottom: 8px;
+}
+
+#card-edit-controls{
+    float: right;
+}
+
+#edit-window{
+    padding-top: 16px;
+}
+
+.card-edit-window{
+    border: 1px;
+    border-style: solid;
+    border-color: #3c404d;
+}
+
+.edit-header{
+    background-color: #3c404d;
+    padding: 8px;
 }

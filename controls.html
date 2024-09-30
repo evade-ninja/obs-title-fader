@@ -5,6 +5,9 @@
 		<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 		<script src="hotkeys.js"></script>
+		<link rel="stylesheet" href="fa/fontawesome.min.css">
+		<link rel="stylesheet" href="fa/solid.min.css">
+		<link rel="stylesheet" href="fa/regular.min.css">
 
 	<script type="text/javascript">
 	const mindcontrol = new BroadcastChannel('obs-title');
@@ -52,17 +55,17 @@
 		//console.log("hello");
 	}
 
-	function loadCards(carddata){
+	function loadCards(cardData){
 		//var opts = "";
 		$("#cards").html("");
-		for(let x = 1; x<maxCards; x++){	
-			if(carddata.hasOwnProperty("Card"+x)){
-				var s = JSON.parse(carddata["Card"+x]);
-				$("#cards").append(new Option(s.title, "Card"+x));
-			}else{
-				$("#cards").append(new Option(x + " - Empty", "Card"+x));
+		if(cardData.hasOwnProperty("numCards") && cardData.hasOwnProperty("cards")){
+			for (let x = 1; x < maxCards; x++) {
+				var s = JSON.parse(cardData[x]);
+				$("#cards").append(new Option(s.title, x));
 			}
-			
+		}else{
+			// Storage is empty or corrupt
+			localStorage.clear();
 		}
 	}
 
@@ -106,20 +109,64 @@
 	<body>
 	<div class="input-group">
 		<div id="cardselect">
-		 <label for="cards">Card:</label>
+		<i class="fa-regular fa-circle-user"></i>
 			<select id="cards" name="cards" onchange="load();">
 			</select> 
 		</div>
 	</div>
-	<div>
-		<div class="input-group"><label for="title">Title:</label></div>
-		<div class="input-group"><input type="text" id="title" name="title"></div>
-		<div class="input-group"><label for="title">SubTitle:</label></div>
-		<div class="input-group"><input type="text" id="subtitle" name="subtitle"></div>
-		<button onclick="save();" class="success">Save</button>
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<button onclick="clearCard();" class="danger">Clear Card</button>
+
+	<div id="card-tools">
+		<div class="toolstrip" id="card-controls">
+			<button onclick="sendTitle();" class="primary bigger pt"><i class="fa-solid fa-circle-play"></i></button>
+			<button onclick="mindcontrol.postMessage({'action':'hide'});" class="stop stopt bigger"><i class="fa-solid fa-circle-stop"></i></button>
+		</div>
+
+		<div class="toolstrip" id="card-edit-controls">
+			<button onclick="" class="bigger success st" title="Add"><i class="fa-solid fa-circle-plus"></i></button>
+			<button onclick="" class="bigger warning wt"><i class="fa-solid fa-circle-chevron-down"></i></button>
+			<button onclick="" class="bigger danger dt"><i class="fa-solid fa-trash-can"></i></button>
+			&nbsp;
+			<button onclick="exportCards();" class="bigger vault vault-txt"><i class="fa-solid fa-vault"></i></button>
+		</div>
 	</div>
+
+	<div id="edit-window">
+		<div class="card-edit-window">
+			<div class="edit-header">
+				<i class="fa-solid fa-pencil"></i> Edit Title
+			</div>
+			<div class="input-group"><i class="fa-regular fa-circle-user"></i>&nbsp;<input type="text" id="title" name="title"></div>
+			<div class="input-group"><i class="fa-regular fa-address-card"></i>&nbsp;<input type="text" id="subtitle" name="subtitle"></div>
+
+			<div class="toolstrip ts-inside">
+				<button onclick="save();" class="bigger success st" title="Save"><i class="fa-solid fa-floppy-disk"></i></button>
+				<button onclick="" class="bigger danger dt"><i class="fa-solid fa-rectangle-xmark"></i></button>
+			</div>
+
+
+			<div>
+				<button onclick="save();" class="success">Save</button>
+			</div>
+			
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<button onclick="clearCard();" class="danger">Clear Card</button>
+		</div>
+	</div>
+
+	<div id="export" style="display:none;">
+		<div class="card-edit-window">
+			<div class="edit-header">
+				<i class="fa-solid fa-vault"></i> Import/Export
+			</div>
+			<div class="input-group"><i class="fa-solid fa-database"></i>&nbsp;<textarea name="edata" id="edata" cols="30" rows="10 spellcheck=" false"></textarea></div>
+	
+			<div class="toolstrip ts-inside">
+				<button onclick="importCards();" class="bigger success st" title="import"><i class="fa-solid fa-download"></i></button>
+				<button onclick="$('#export').hide();" class="bigger primary pt"><i class="fa-solid fa-rectangle-xmark"></i></button>
+			</div>
+		</div>
+	</div>
+
 	<div>
 	
 	</div>
@@ -138,7 +185,7 @@
 	//loadCards(JSON.parse(JSON.stringify(localStorage)));
 	loadCards(localStorage);
 	load();
-
+/*
 	function checkHotKeys(){
 		if (hotkeySwitch1 != hotkeySwitch1Old){
 			sendTitle();	
@@ -163,12 +210,12 @@
 	}
 
 	setInterval(checkUpdates, 200);
-
+*/
 	window.addEventListener('obsSceneChanged', function(event){
 		$("#title").val(event.detail.name);
 	})
 	</script>
-
+<!--
 	<div id="export" style="display:none;">
 		<label for="edata">Import/Export:</label>
 		<textarea name="edata" id="edata" cols="30" rows="10 spellcheck="false"></textarea>
@@ -176,6 +223,6 @@
 		&nbsp;&nbsp;
 		<button onclick="$('#export').hide();" class="primary">Done</button>
 	</div>
-
+-->
 	
 	</html>

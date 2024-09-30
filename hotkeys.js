@@ -1,1 +1,1 @@
-hotkeySwitch1 = 1;
+hotkeySwitch1 = 0;
