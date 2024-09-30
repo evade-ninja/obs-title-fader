@@ -6,6 +6,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <title>Lyrics Source</title>
 	<link rel="stylesheet" href="browser.css">
+	<script src="vars.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	</head>
 	
@@ -27,15 +28,24 @@ mindcontrol.onmessage = (messageEvent) => {
 	//alert(messageEvent.data.action);
 
 	if (messageEvent.data.action === 'hide') {
-		$("#title-panel").fadeOut(400);
+		$("#title-panel").fadeOut(fade_time);
 	}
 	if (messageEvent.data.action === 'show') {
 		$("#title-name").html(messageEvent.data.text1);
 	    $("#title-subtitle").html(messageEvent.data.text2);
-		$("#title-panel").fadeIn(400);
-		setTimeout(function(){$('#title-panel').fadeOut(400);}, 7000);
+		$("#title-panel").fadeIn(fade_time);
+		setTimeout(function(){$('#title-panel').fadeOut(fade_time);}, title_length);
+	}
+	if (messageEvent.data.action === 'load') {
+		$("#title-name").html(messageEvent.data.text1);
+		$("#title-subtitle").html(messageEvent.data.text2);
 	}
   }
+
+window.addEventListener('otfShow', function (event) {
+	$("#title-panel").fadeIn(fade_time);
+	setTimeout(function () { $('#title-panel').fadeOut(fade_time); }, title_length);
+});
 
 </script>
 </html>
